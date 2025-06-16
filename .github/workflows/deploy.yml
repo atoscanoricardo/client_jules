@@ -17,7 +17,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18' # Matches the Node.js version used in some local tests/runs
+          node-version: "18" # Matches the Node.js version used in some local tests/runs
 
       - name: Install dependencies
         run: npm install # Assuming npm is used based on previous steps
@@ -39,4 +39,3 @@ jobs:
           # allow_empty_commit: false # Default is false
           # force_orphan: false # Default is false, creates a new orphan branch every time
           # keep_files: false # Default is false, removes old files from the branch
-```
