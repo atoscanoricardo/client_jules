@@ -81,11 +81,11 @@
                         :icon="getElementIcon(element.type)"
                         class="mr-3"
                       ></v-icon>
-                      <span class="element-label"
-                        >{{ element.label || "Unnamed Element" }} ({{
+                      <span class="element-label">
+                        {{ element.label || "Unnamed Element" }} ({{
                           element.type
-                        }})</span
-                      >
+                        }})
+                      </span>
                       <div class="element-actions">
                         <v-btn
                           size="small"
