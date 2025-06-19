@@ -1,41 +1,41 @@
+# https://github.com/actions/deploy-pages#usage
 name: Deploy to GitHub Pages
-
 on:
+  workflow_dispatch:
   push:
     branches:
-      - main # Or 'master', or your default branch for the Nuxt project
-
+      - main
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # Allows the action to push to the gh-pages branch
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
         with:
-          node-version: "18" # Matches the Node.js version used in some local tests/runs
-
-      - name: Install dependencies
-        run: npm install # Assuming npm is used based on previous steps
-
-      - name: Build Nuxt application for static deployment
-        run: npm run generate # Nuxt 3 command for static site generation
-
+          node-version: "20"
+      # Pick your own package manager and build script
+      - run: npm install
+      - run: npx nuxt build --preset github_pages
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./.output/public
+  # Deployment job
+  deploy:
+    # Add a dependency to the build job
+    needs: build
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
+    # Deploy to the github_pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    # Specify runner + deployment step
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./.output/public # Nuxt 3's default static output directory
-          # Optional customizations below:
-          # user_name: 'github-actions[bot]'
-          # user_email: 'github-actions[bot]@users.noreply.github.com'
-          # commit_message: 'Deploy to GitHub Pages (from GHA)'
-          # cname: 'your.custom.domain.com' # Add if using a custom domain
-          # publish_branch: gh-pages # Default is gh-pages, can be changed if needed
-          # allow_empty_commit: false # Default is false
-          # force_orphan: false # Default is false, creates a new orphan branch every time
-          # keep_files: false # Default is false, removes old files from the branch
+        id: deployment
+        uses: actions/deploy-pages@v4
