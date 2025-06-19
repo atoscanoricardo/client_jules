@@ -1,5 +1,7 @@
 # Nuxt Minimal Starter
 
+- [Home page](https://atoscanoricardo.github.io/client_jules/)
+
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
 ## Setup
